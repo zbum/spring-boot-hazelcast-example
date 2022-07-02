@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class HazelcastConfig {
-
     @Bean
     public IQueue<String> nameQueue(HazelcastInstance hazelcastInstance) {
         return hazelcastInstance.getQueue("name");

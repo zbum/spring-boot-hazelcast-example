@@ -5,30 +5,49 @@ import com.hazelcast.collection.ItemEvent;
 import com.hazelcast.collection.ItemListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jline.terminal.Terminal;
-import org.springframework.shell.Shell;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.commands.Clear;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Scanner;
 
 @Slf4j
-@ShellComponent
 @RequiredArgsConstructor
+@Component
 public class NameCommand {
 
     private final IQueue<String> nameQueue;
 
-    @ShellMethod(value="test")
-    public String name() {
-        return nameQueue.poll();
-    }
-
-    @ShellMethod(value="test")
-    public String addName(String name) {
-        nameQueue.add(name);
-        return name;
+    @EventListener(value = ApplicationReadyEvent.class)
+    public void onApplicationReady(ApplicationReadyEvent event) {
+        new Thread(() ->
+                new Scanner(System.in)
+                        .useDelimiter("\n")
+                        .tokens()
+                        .map(it -> it.split(" ", 2))
+                        .forEach(it -> {
+                            switch (it[0].toLowerCase()) {
+                                case "add" : {
+                                    if ( it.length == 2) {
+                                        nameQueue.add(it[1]);
+                                    }
+                                    break;
+                                }
+                                case "poll" : {
+                                    nameQueue.poll();
+                                    break;
+                                }
+                                case "exit" : {
+                                    System.exit(0);
+                                    break;
+                                }
+                                default: {
+                                    //skip!!
+                                }
+                            }
+                        }))
+                .start();
     }
 
     @PostConstruct
@@ -36,13 +55,12 @@ public class NameCommand {
         nameQueue.addItemListener(new ItemListener<>() {
             @Override
             public void itemAdded(ItemEvent<String> item) {
-                System.out.println("\n[ADDED:"+item.getItem()+"]");
-
+                System.out.println("\n[ADDED:" + item.getItem() + "]");
             }
 
             @Override
             public void itemRemoved(ItemEvent<String> item) {
-                System.out.println("\n[REMOVED:"+item.getItem()+"]");
+                System.out.println("\n[REMOVED:" + item.getItem() + "]");
             }
         }, true);
     }
