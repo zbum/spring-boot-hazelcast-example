@@ -21,33 +21,31 @@ public class NameCommand {
 
     @EventListener(value = ApplicationReadyEvent.class)
     public void onApplicationReady(ApplicationReadyEvent event) {
-        new Thread(() ->
-                new Scanner(System.in)
-                        .useDelimiter("\n")
-                        .tokens()
-                        .map(it -> it.split(" ", 2))
-                        .forEach(it -> {
-                            switch (it[0].toLowerCase()) {
-                                case "add" : {
-                                    if ( it.length == 2) {
-                                        nameQueue.add(it[1]);
-                                    }
-                                    break;
-                                }
-                                case "poll" : {
-                                    nameQueue.poll();
-                                    break;
-                                }
-                                case "exit" : {
-                                    System.exit(0);
-                                    break;
-                                }
-                                default: {
-                                    //skip!!
-                                }
+        new Scanner(System.in)
+                .useDelimiter("\n")
+                .tokens()
+                .map(it -> it.split(" ", 2))
+                .forEach(it -> {
+                    switch (it[0].toLowerCase()) {
+                        case "add" : {
+                            if ( it.length == 2) {
+                                nameQueue.add(it[1]);
                             }
-                        }))
-                .start();
+                            break;
+                        }
+                        case "poll" : {
+                            nameQueue.poll();
+                            break;
+                        }
+                        case "exit" : {
+                            System.exit(0);
+                            break;
+                        }
+                        default: {
+                            //skip!!
+                        }
+                    }
+                });
     }
 
     @PostConstruct
