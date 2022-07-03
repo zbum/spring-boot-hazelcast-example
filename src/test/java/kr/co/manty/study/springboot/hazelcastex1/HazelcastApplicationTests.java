@@ -1,4 +1,4 @@
-package com.nhnacademy.edu.springboot.hazelcastex1;
+package kr.co.manty.study.springboot.hazelcastex1;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;

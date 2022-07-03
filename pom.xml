@@ -8,7 +8,7 @@
         <version>2.7.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.nhnacademy.edu.springboot</groupId>
+    <groupId>kr.co.manty.study.springboot</groupId>
     <artifactId>hazelcast-ex1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>hazelcast</name>
